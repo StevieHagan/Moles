@@ -31,8 +31,8 @@ public class AtomGridSnapper : MonoBehaviour
         int gridPosX = atom.GetGridPos().x;
         int gridPosY = atom.GetGridPos().y;
 
-        gridPosX = Mathf.Clamp(gridPosX, 0, gridSize);
-        gridPosY = Mathf.Clamp(gridPosY, 0, gridSize);
+        gridPosX = Mathf.Clamp(gridPosX, 1, gridSize -1);
+        gridPosY = Mathf.Clamp(gridPosY, 1, gridSize -1);
 
         transform.position = (new Vector3(gridPosX * gridSnap,
                                           gridPosY * gridSnap, 0f));

@@ -19,7 +19,7 @@ public class AtomGrid : MonoBehaviour
 
     void Update()
     {
-        
+        CheckWinCondition();
     }
 
     private void PopulateAtomsArray()
@@ -34,6 +34,28 @@ public class AtomGrid : MonoBehaviour
             int y = atom.GetGridPos().y;
 
             atoms[x, y] = atom;
+        }
+
+    }
+
+    private void CheckWinCondition()
+    {
+        bool unbondedAtomExists = false;
+
+        for(int x = 0; x < gridSize; x++)
+        {
+            for(int y = 0; y < gridSize; y++)
+            {
+                if (atoms[x, y] == null) { continue; }
+                if (!atoms[x, y].IsFullyBonded())
+                {
+                    unbondedAtomExists = true;
+                }
+            }
+        }
+        if(!unbondedAtomExists)
+        {
+            print("YOU WIN!!");
         }
     }
 
