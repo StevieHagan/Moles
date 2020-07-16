@@ -12,13 +12,13 @@ public class AtomGridSnapper : MonoBehaviour
     {
         atom = GetComponent<Atom>();
         gridSize = FindObjectOfType<LevelController>().GetGridSize();
-        transform.parent = FindObjectOfType<Atoms>().gameObject.transform;
+        //transform.parent = FindObjectOfType<Atoms>().gameObject.transform;
     }
 
     void Update()
     {
-        SnapToGrid();
-        RenameAtom();
+        //SnapToGrid();
+        //RenameAtom();
     }
 
     private void SnapToGrid()
@@ -29,6 +29,6 @@ public class AtomGridSnapper : MonoBehaviour
 
     private void RenameAtom()
     {
-        gameObject.name = "Atom " + tag + " " + atom.GetGridPos().ToString();
+        gameObject.name = tag + " " + atom.GetGridPos().ToString();
     }
 }
