@@ -6,6 +6,8 @@ using UnityEngine;
 public class Atom : MonoBehaviour
 {
     [SerializeField] float rotationSpeed = 1;
+    [SerializeField] int bondsTouching = 0;
+
     int rotationOffset = 0;
     int gridSize;
     Vector2Int gridPos; 
@@ -13,7 +15,6 @@ public class Atom : MonoBehaviour
 
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -29,11 +30,12 @@ public class Atom : MonoBehaviour
                                                       rotationSpeed * Time.deltaTime);
     }
 
+
     public Vector2Int GetGridPos()
     {
         if (gridSize == 0)
         {
-            gridSize = FindObjectOfType<LevelController>().GetGridSize();
+            gridSize = FindObjectOfType<LevelController>().GetGridSnap();
         }
 
         gridPos.x = Mathf.RoundToInt(transform.position.x / gridSize);

@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class LevelController : MonoBehaviour
 {
-    const int GRID_SIZE = 2;
+    const int GRID_SNAP = 2;
+    [SerializeField] int gridSize = 10;
+
+    public int GetGridSnap()
+    {
+        return GRID_SNAP;
+    }
 
     public int GetGridSize()
     {
-        return GRID_SIZE;
+        return gridSize;
     }
 }

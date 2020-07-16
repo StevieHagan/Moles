@@ -5,26 +5,37 @@
 [RequireComponent(typeof(Atom))]
 public class AtomGridSnapper : MonoBehaviour
 {
-    Atom atom;
     int gridSize;
+    Atom atom;
+    int gridSnap;
 
     void Awake()
     {
         atom = GetComponent<Atom>();
-        gridSize = FindObjectOfType<LevelController>().GetGridSize();
-        //transform.parent = FindObjectOfType<Atoms>().gameObject.transform;
+
+        LevelController level = FindObjectOfType<LevelController>();
+        gridSnap = level.GetGridSnap();
+        gridSize = level.GetGridSize();
+
+        transform.parent = FindObjectOfType<AtomGrid>().gameObject.transform;
     }
 
     void Update()
     {
-        //SnapToGrid();
-        //RenameAtom();
+        SnapToGrid();
+        RenameAtom();
     }
 
     private void SnapToGrid()
     {
-        transform.position = (new Vector3(atom.GetGridPos().x * gridSize,
-                                          atom.GetGridPos().y * gridSize, 0f));
+        int gridPosX = atom.GetGridPos().x;
+        int gridPosY = atom.GetGridPos().y;
+
+        gridPosX = Mathf.Clamp(gridPosX, 0, gridSize);
+        gridPosY = Mathf.Clamp(gridPosY, 0, gridSize);
+
+        transform.position = (new Vector3(gridPosX * gridSnap,
+                                          gridPosY * gridSnap, 0f));
     }
 
     private void RenameAtom()

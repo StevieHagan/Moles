@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8584701648952447580}
   - component: {fileID: 376497097726066650}
   - component: {fileID: 8667748959729990950}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 5082563609976800918}
   - component: {fileID: -22616848540786097}
   - component: {fileID: 117913717335430542}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Atom 1 Bond
   m_TagString: Single
   m_Icon: {fileID: 0}
@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 4
+  bondsTouching: 0
 --- !u!114 &117913717335430542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,8 +164,8 @@ GameObject:
   - component: {fileID: 468145430867511195}
   - component: {fileID: 5727174098829860350}
   - component: {fileID: 4642134390646657899}
-  - component: {fileID: 3881775098369765624}
-  m_Layer: 0
+  - component: {fileID: 5581489024029467510}
+  m_Layer: 8
   m_Name: Bond North
   m_TagString: North Bond
   m_Icon: {fileID: 0}
@@ -232,7 +233,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3881775098369765624
+--- !u!65 &5581489024029467510
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,7 +241,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9221635780523612081}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.0000001, y: 0.2, z: 1.0000002}
