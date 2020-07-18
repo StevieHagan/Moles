@@ -8,6 +8,10 @@ public class AtomGrid : MonoBehaviour
     int gridSize;
     Atom[,] atoms;
 
+    //Contains all the gridRefs which are pointed at by a bond as KEY
+    //and the bond whi
+    [SerializeField] HashSet<Bond> bonds = new HashSet<Bond>(); 
+
     void Start()
     {
         gridSize = FindObjectOfType<LevelController>().GetGridSize();
@@ -40,20 +44,17 @@ public class AtomGrid : MonoBehaviour
 
     private void CheckWinCondition()
     {
-        bool unbondedAtomExists = false;
+        bool unbondedBondExists = false;
 
-        for(int x = 0; x < gridSize; x++)
+        foreach(Bond bond in bonds)
         {
-            for(int y = 0; y < gridSize; y++)
+            if(bond.GetBonded() == false)
             {
-                if (atoms[x, y] == null) { continue; }
-                if (!atoms[x, y].IsFullyBonded())
-                {
-                    unbondedAtomExists = true;
-                }
+                unbondedBondExists = true;
+                break;
             }
         }
-        if(!unbondedAtomExists)
+        if(!unbondedBondExists)
         {
             print("YOU WIN!!");
         }
@@ -62,5 +63,36 @@ public class AtomGrid : MonoBehaviour
     public Atom GetAtomAtGridPos(Vector2Int gridPosition)
     {
         return atoms[gridPosition.x, gridPosition.y];
+    }
+
+    
+    public void AddBond(Bond bond)
+    {//Adds a bond to the HashSet
+        bonds.Add(bond);
+        
+    }
+
+    public void EvaluateBonds()
+    {//Iterates through all bonds and sets them as bonded or unbonded
+        print(bonds.Count);
+
+        foreach(Bond bondA in bonds)
+        {
+            foreach(Bond bondB in bonds)
+            {
+                if(bondA.GetComponentInParent<Atom>() == bondB.GetComponentInParent<Atom>()) { continue; }
+                if( bondB.GetComponentInParent<Atom>().GetGridPos() == bondA.GetPointsTo() &&
+                    bondA.GetComponentInParent<Atom>().GetGridPos() == bondB.GetPointsTo())
+                {
+                    bondA.SetBonded(true);
+                    bondB.SetBonded(true);
+                    break;
+                }
+                else
+                {
+                    bondA.SetBonded(false);
+                }
+            }
+        }
     }
 }
