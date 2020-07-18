@@ -17,6 +17,7 @@ public class Atom : MonoBehaviour
     Vector2Int gridPos;
     Atom[] pointsTo = new Atom[4];
     [SerializeField] List<Atom> bondsWith = new List<Atom>();
+    BoxCollider2D collider;
 
 
     void Start()

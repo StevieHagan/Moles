@@ -142,6 +142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 4
   bondsTouching: 0
+  fullyBonded: 0
+  bondsWith: []
 --- !u!114 &6230155973869289763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,7 +167,6 @@ GameObject:
   - component: {fileID: 1302033525017775231}
   - component: {fileID: 2904233825731768919}
   - component: {fileID: 7738030053485272626}
-  - component: {fileID: 3497500603021896392}
   m_Layer: 8
   m_Name: Bond East
   m_TagString: East Bond
@@ -234,19 +235,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3497500603021896392
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5447793418565551854}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 0.2, z: 1.0000002}
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &9221635780523612081
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,7 +246,6 @@ GameObject:
   - component: {fileID: 468145430867511195}
   - component: {fileID: 5727174098829860350}
   - component: {fileID: 4642134390646657899}
-  - component: {fileID: 3881775098369765624}
   m_Layer: 8
   m_Name: Bond North
   m_TagString: North Bond
@@ -327,16 +314,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3881775098369765624
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9221635780523612081}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 0.2, z: 1.0000002}
-  m_Center: {x: 0, y: 1, z: 0}

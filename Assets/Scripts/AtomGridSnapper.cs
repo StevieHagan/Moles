@@ -17,7 +17,7 @@ public class AtomGridSnapper : MonoBehaviour
         gridSnap = level.GetGridSnap();
         gridSize = level.GetGridSize();
 
-        transform.parent = FindObjectOfType<AtomGrid>().gameObject.transform;
+       // transform.parent = FindObjectOfType<AtomGrid>().gameObject.transform;
     }
 
     void Update()
@@ -34,12 +34,12 @@ public class AtomGridSnapper : MonoBehaviour
         gridPosX = Mathf.Clamp(gridPosX, 1, gridSize -1);
         gridPosY = Mathf.Clamp(gridPosY, 1, gridSize -1);
 
-        transform.position = (new Vector3(gridPosX * gridSnap,
-                                          gridPosY * gridSnap, 0f));
+        //transform.position = (new Vector3(gridPosX * gridSnap,
+                                       //   gridPosY * gridSnap, 0f));
     }
 
     private void RenameAtom()
     {
-        gameObject.name = tag + " " + atom.GetGridPos().ToString();
+        //gameObject.name = tag + " " + atom.GetGridPos().ToString();
     }
 }
