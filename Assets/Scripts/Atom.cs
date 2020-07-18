@@ -13,16 +13,17 @@ public class Atom : MonoBehaviour
     int numBonds = 0;
     [SerializeField] bool fullyBonded;
     AtomGrid grid;
+    Bond[] bonds;
     int gridSize;
     Vector2Int gridPos;
-    Atom[] pointsTo = new Atom[4];
+    List<Atom> pointsTo = new List<Atom>();
     [SerializeField] List<Atom> bondsWith = new List<Atom>();
-    BoxCollider2D collider;
 
 
     void Start()
     {
         grid = FindObjectOfType<AtomGrid>();
+        bonds = GetComponentsInChildren<Bond>();
         InitialiseOffsets();
         StartCoroutine(DelayedStart());
     }
@@ -41,6 +42,18 @@ public class Atom : MonoBehaviour
         RotationAnimator();
     }
 
+    private void OnMouseDown()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {//When the left mouse button is clicked, the rotation offset is increased (cycles back to 0 from 3)
+
+            rotationOffset = (rotationOffset == 3 ? 0 : rotationOffset + 1);
+            BroadcastMessage("UpdateBonds");
+            UpdatePointsTo();
+            UpdateBondsWith(true);
+        }
+    }
+
     private void InitialiseOffsets()
     {//Sets the correct offset index for atoms rotated at design time.
         int zRotation = Mathf.RoundToInt(transform.rotation.eulerAngles.z);
@@ -54,112 +67,15 @@ public class Atom : MonoBehaviour
 
     private void UpdatePointsTo()
     {
-        if (tag == "Single")
-        {
-            numBonds = 1;
-            if (rotationOffset == 0)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-            }
-            else if (rotationOffset == 1)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-            }
-            else if (rotationOffset == 2)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-            }
-            else if (rotationOffset == 3)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-            }
-        }
-        if (tag == "Double Perp")
-        {
-            numBonds = 2;
-            if (rotationOffset == 0)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-            }
-            else if (rotationOffset == 1)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-            }
-            else if (rotationOffset == 2)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-            }
-            else if (rotationOffset == 3)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-            }
-        }
-        if (tag == "Double Straight")
-        {
-            numBonds = 2;
-            if (rotationOffset == 0 || rotationOffset == 2)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-            }
-            else if (rotationOffset == 1 || rotationOffset == 3)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-            }
-        }
-        if (tag == "Triple")
-        {
-            numBonds = 3;
-            if (rotationOffset == 0)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-                pointsTo[2] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-            }
-            else if (rotationOffset == 1)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-                pointsTo[2] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-            }
-            else if (rotationOffset == 2)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-                pointsTo[2] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-            }
-            else if (rotationOffset == 3)
-            {
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-                pointsTo[2] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-            }
+        pointsTo.Clear();
 
-        }
-        if (tag == "Quad")
+        foreach (Bond bond in bonds)
         {
-            numBonds = 4;
-                pointsTo[0] = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-                pointsTo[1] = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-                pointsTo[2] = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-                pointsTo[3] = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
+            pointsTo.Add(grid.GetAtomAtGridPos(bond.GetPointsTo()));
         }
-        //String sentence = "Atom " + name + "points to ";
-        //foreach (Atom atom in pointsTo)
-        //{
-        //    if (atom)
-        //    {
-        //        sentence = sentence + atom.name + ", ";
-        //    }
-        //}
-        //print(sentence);
-
     }
+
+
     public void UpdateBondsWith(bool wasMoved)
     {//Pass in true if this atom has just been moved, causes its neighbours to also Update their bonds
 
@@ -175,7 +91,7 @@ public class Atom : MonoBehaviour
         }            
         bondsTouching = bondsWith.Count;
 
-        if(bondsTouching == numBonds)
+        if (bondsTouching == bonds.Length)
         {
             fullyBonded = true;
         }
@@ -199,7 +115,7 @@ public class Atom : MonoBehaviour
         }
     }
 
-        private void RotationAnimator()
+    private void RotationAnimator()
     {//Rotates the atom using a slerp for smooth animation, target rotation is -90 * offset.
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, rotationOffset * -90f),
@@ -220,14 +136,16 @@ public class Atom : MonoBehaviour
         return gridPos;
     }
 
+    public int GetRotationOffset() { return rotationOffset; }
+
     public bool PointsTo(Vector2Int gridPos)
     {
         //returns true if this atom points to a specified grid position
         bool pointsToGridPos = false;
-        foreach(Atom atom in pointsTo)
+
+        foreach(Bond bond in bonds)
         {
-            if(!atom) { continue; }
-            if(atom.GetGridPos() == gridPos) { pointsToGridPos = true; }
+            if(bond.GetPointsTo() == gridPos) { pointsToGridPos = true; }
         }
         return pointsToGridPos;
     }
@@ -237,14 +155,5 @@ public class Atom : MonoBehaviour
         return fullyBonded;
     }
 
-    private void OnMouseDown()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {//When the left mouse button is clicked, the rotation offset is increased (cycles back to 0 from 3)
-
-            rotationOffset = (rotationOffset == 3 ? 0 : rotationOffset + 1);
-            UpdatePointsTo();
-            UpdateBondsWith(true);
-        }
-    }
+  
 }
