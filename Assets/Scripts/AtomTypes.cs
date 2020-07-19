@@ -1,0 +1,1 @@
+﻿public enum AtomType { empty, blocked, seeded, occupied};

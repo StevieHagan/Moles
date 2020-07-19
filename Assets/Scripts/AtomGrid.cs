@@ -8,9 +8,8 @@ public class AtomGrid : MonoBehaviour
     int gridSize;
     Atom[,] atoms;
 
-    //Contains all the gridRefs which are pointed at by a bond as KEY
-    //and the bond whi
-    [SerializeField] HashSet<Bond> bonds = new HashSet<Bond>(); 
+    //Set populated by all bonds
+    HashSet<Bond> bonds = new HashSet<Bond>(); 
 
     void Start()
     {
@@ -19,11 +18,6 @@ public class AtomGrid : MonoBehaviour
         atoms = new Atom[gridSize, gridSize];
 
         PopulateAtomsArray();
-    }
-
-    void Update()
-    {
-        CheckWinCondition();
     }
 
     private void PopulateAtomsArray()
@@ -42,7 +36,7 @@ public class AtomGrid : MonoBehaviour
 
     }
 
-    private void CheckWinCondition()
+    public bool CheckWinCondition()
     {
         bool unbondedBondExists = false;
 
@@ -57,6 +51,11 @@ public class AtomGrid : MonoBehaviour
         if(!unbondedBondExists)
         {
             print("YOU WIN!!");
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -74,8 +73,6 @@ public class AtomGrid : MonoBehaviour
 
     public void EvaluateBonds()
     {//Iterates through all bonds and sets them as bonded or unbonded
-        print(bonds.Count);
-
         foreach(Bond bondA in bonds)
         {
             foreach(Bond bondB in bonds)

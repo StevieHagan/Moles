@@ -7,36 +7,22 @@ using UnityEngine.Analytics;
 public class Atom : MonoBehaviour
 {
     [SerializeField] float rotationSpeed = 1;
-    [SerializeField] int bondsTouching = 0;
-
-    int rotationOffset = 0;
-    int numBonds = 0;
-    [SerializeField] bool fullyBonded;
+    [SerializeField] int rotationOffset = 0;
     AtomGrid grid;
     Bond[] bonds;
     int gridSize;
     Vector2Int gridPos;
     List<Atom> pointsTo = new List<Atom>();
-    [SerializeField] List<Atom> bondsWith = new List<Atom>();
 
 
     void Start()
-    {
+    {        
+        InitialiseOffsets();
         grid = FindObjectOfType<AtomGrid>();
         bonds = GetComponentsInChildren<Bond>();
-        InitialiseOffsets();
-        StartCoroutine(DelayedStart());
-    }
-
-    private IEnumerator DelayedStart()
-    {//Delayed start to some methods needed to allow all atoms to load
-        //into atomgrid before proceeding.
-        yield return new WaitForSeconds(0.5f);
         UpdatePointsTo();
-        UpdateBondsWith(true);
     }
 
-    // Update is called once per frame
     void Update()
     {
         RotationAnimator();
@@ -50,7 +36,7 @@ public class Atom : MonoBehaviour
             rotationOffset = (rotationOffset == 3 ? 0 : rotationOffset + 1);
             BroadcastMessage("UpdateBonds");
             UpdatePointsTo();
-            UpdateBondsWith(true);
+            grid.CheckWinCondition();
         }
     }
 
@@ -74,47 +60,7 @@ public class Atom : MonoBehaviour
             pointsTo.Add(grid.GetAtomAtGridPos(bond.GetPointsTo()));
         }
     }
-
-
-    public void UpdateBondsWith(bool wasMoved)
-    {//Pass in true if this atom has just been moved, causes its neighbours to also Update their bonds
-
-        bondsWith.Clear();
-
-        foreach(Atom atom in pointsTo)//iterate over each atom this atom points to
-        {
-            if(!atom) { continue; }
-            if(atom.PointsTo(gridPos)) //Does the atom we're pointing to point back?
-            {
-                bondsWith.Add(atom);//Add it to the list
-            }
-        }            
-        bondsTouching = bondsWith.Count;
-
-        if (bondsTouching == bonds.Length)
-        {
-            fullyBonded = true;
-        }
-        else
-        {
-            fullyBonded = false;
-        }
-
-        //If this atom has just been moved, ask all its neighbours to recheck their bonds.
-        if(wasMoved)
-        {
-            Atom tester;
-            tester = grid.GetAtomAtGridPos(gridPos + Vector2Int.up);
-            if(tester) { tester.UpdateBondsWith(false); }
-            tester = grid.GetAtomAtGridPos(gridPos + Vector2Int.right);
-            if (tester) { tester.UpdateBondsWith(false); }
-            tester = grid.GetAtomAtGridPos(gridPos + Vector2Int.down);
-            if (tester) { tester.UpdateBondsWith(false); }
-            tester = grid.GetAtomAtGridPos(gridPos + Vector2Int.left);
-            if (tester) { tester.UpdateBondsWith(false); }
-        }
-    }
-
+    
     private void RotationAnimator()
     {//Rotates the atom using a slerp for smooth animation, target rotation is -90 * offset.
 
@@ -149,11 +95,5 @@ public class Atom : MonoBehaviour
         }
         return pointsToGridPos;
     }
-
-    public bool IsFullyBonded()
-    {
-        return fullyBonded;
-    }
-
   
 }

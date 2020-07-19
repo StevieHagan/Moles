@@ -14,12 +14,16 @@ public class Bond : MonoBehaviour
 
     Atom parent;
     AtomGrid grid;
+    Animator animator;
 
     void Start()
     {
         grid = FindObjectOfType<AtomGrid>();
         grid.AddBond(this);
+
         parent = GetComponentInParent<Atom>();
+        animator = GetComponent<Animator>();
+
         UpdatePointsTo();
         UpdateIsBonded();
     }
@@ -43,12 +47,11 @@ public class Bond : MonoBehaviour
 
     public Vector2Int GetPointsTo() { return pointsTo; }
 
-    public void SetBonded(bool bonded) { isBonded = bonded; }
+    public void SetBonded(bool bonded) 
+    { 
+        isBonded = bonded;
+        animator.SetBool("bonded", isBonded);
+    }
     public bool GetBonded() { return isBonded; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
