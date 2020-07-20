@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 9063866886954410210}
   - component: {fileID: 5082563609976800918}
   - component: {fileID: -3428337192400508602}
-  - component: {fileID: 293987024021227298}
   m_Layer: 8
   m_Name: Atom 4 Bonds
   m_TagString: Quad
@@ -60,21 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 4
-  bondsTouching: 0
-  fullyBonded: 0
-  bondsWith: []
---- !u!114 &293987024021227298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 547709617826922273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5e9cb69275459240b0f47aea3a902c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  rotationOffset: 0
 --- !u!1 &3332254192566902247
 GameObject:
   m_ObjectHideFlags: 0

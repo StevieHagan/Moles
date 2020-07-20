@@ -15,8 +15,14 @@ public class Generator : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] float occupiedProb = 0.3f;
     [Tooltip("Proportion the probability of bonding decreases each time a bond is formed")]
     [Range(0f, 0.99f)] [SerializeField] float probabilityDropOff;
+    [Tooltip("When selected generated atoms are displayed as non-playable schematic")][SerializeField] bool testMode;
 
-    
+    [SerializeField] Atom singleAtom;
+    [SerializeField] Atom doubleCornerAtom;
+    [SerializeField] Atom doubleStraightAtom;
+    [SerializeField] Atom tripleAtom;
+    [SerializeField] Atom quadAtom;
+
 
     //TODO these are for testing only, remove later
     [SerializeField] GameObject blockedSquare;
@@ -25,6 +31,7 @@ public class Generator : MonoBehaviour
     //END testing block
 
     LevelController controller;
+    AtomGrid atomGrid;
     int gridSnap;
     PreAtom[,] atomSquares;
 
@@ -44,6 +51,7 @@ public class Generator : MonoBehaviour
     void Start()
     {
         controller = FindObjectOfType<LevelController>();
+        atomGrid = FindObjectOfType<AtomGrid>();
         gridSnap = controller.GetGridSnap();
         atomSquares = new PreAtom[gridSizeX, gridSizeY];
         PopulateArray();
@@ -53,7 +61,6 @@ public class Generator : MonoBehaviour
     private void PopulateArray()
     {
         probabilityDropOff = 1 - probabilityDropOff;
-
         //Insert blocked squares based on density selection, fill rest of array with empties
         for(int y = 0; y < gridSizeY; y++)
         {
@@ -193,7 +200,7 @@ public class Generator : MonoBehaviour
                         //if no bonds have been formed in this square, unseed it
                         if(atomSquares[x, y].atomType == AtomType.seeded)
                         {
-                            atomSquares[x, y].atomType = AtomType.empty;
+                            atomSquares[x, y].atomType = AtomType.blocked;
                         }
                     }
                 }
@@ -209,35 +216,79 @@ public class Generator : MonoBehaviour
             for (int x = 0; x < gridSizeY; x++)
             {
                 Vector3 instantiationPosition = new Vector3((x+1) * gridSnap, (y+1) * gridSnap, 0);
-                switch(atomSquares[x, y].atomType)
+                if (testMode)
                 {
-                    case AtomType.blocked:
-                        Instantiate(blockedSquare, instantiationPosition, Quaternion.identity);
-                    break;
+                    switch (atomSquares[x, y].atomType)
+                    {
+                        case AtomType.blocked:
+                            Instantiate(blockedSquare, instantiationPosition, Quaternion.identity);
+                            break;
 
-                    case AtomType.seeded:
-                        Instantiate(seededSquare, instantiationPosition, Quaternion.identity);
-                    break;
+                        case AtomType.seeded:
+                            Instantiate(seededSquare, instantiationPosition, Quaternion.identity);
+                            break;
 
-                    case AtomType.occupied:
-                        if(atomSquares[x, y].joinsUp == true)
-                        {
-                            Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 0)));
-                        }
-                        if (atomSquares[x, y].joinsRight == true)
-                        {
-                            Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, -90)));
-                        }
-                        if (atomSquares[x, y].joinsDown == true)
-                        {
-                            Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 180)));
-                        }
-                        if (atomSquares[x, y].joinsLeft == true)
-                        {
-                            Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 90)));
-                        }
+                        case AtomType.occupied:
+                            if (atomSquares[x, y].joinsUp == true)
+                            {
+                                Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 0)));
+                            }
+                            if (atomSquares[x, y].joinsRight == true)
+                            {
+                                Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, -90)));
+                            }
+                            if (atomSquares[x, y].joinsDown == true)
+                            {
+                                Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 180)));
+                            }
+                            if (atomSquares[x, y].joinsLeft == true)
+                            {
+                                Instantiate(voidBond, instantiationPosition, Quaternion.Euler(new Vector3(0, 0, 90)));
+                            }
 
+                            break;
+                    }
+                }
+                else
+                {
+                    Atom newAtom;
+                    int rotationOffset = Random.Range(0, 4);
+                    Quaternion rotation = Quaternion.Euler(0, 0, rotationOffset * -90);
+                    int numBonds = 0;
+                    //count the bonds for this atom
+                    if (atomSquares[x, y].joinsUp == true) { numBonds++; }
+                    if (atomSquares[x, y].joinsRight == true) { numBonds++ ; }
+                    if (atomSquares[x, y].joinsDown == true) { numBonds++ ; }
+                    if (atomSquares[x, y].joinsLeft == true) { numBonds++ ; }
+
+                    switch(numBonds)
+                    {
+                        case 1:
+                            newAtom = Instantiate(singleAtom, instantiationPosition, rotation, atomGrid.transform);
+                            newAtom.SetRotationOffset(rotationOffset);
                         break;
+                        case 2:
+                            if((atomSquares[x, y].joinsUp == true && atomSquares[x, y].joinsDown == true) ||
+                                atomSquares[x, y].joinsLeft == true && atomSquares[x, y].joinsRight == true)
+                            {
+                                newAtom = Instantiate(doubleStraightAtom, instantiationPosition, rotation, atomGrid.transform);
+                                newAtom.SetRotationOffset(rotationOffset);
+                            }
+                            else
+                            {
+                                newAtom = Instantiate(doubleCornerAtom, instantiationPosition, rotation, atomGrid.transform);
+                                newAtom.SetRotationOffset(rotationOffset);
+                            }
+                        break;
+                        case 3:
+                            newAtom = Instantiate(tripleAtom, instantiationPosition, rotation, atomGrid.transform);
+                            newAtom.SetRotationOffset(rotationOffset);
+                        break;
+                        case 4:
+                            newAtom = Instantiate(quadAtom, instantiationPosition, rotation, atomGrid.transform);
+                            newAtom.SetRotationOffset(rotationOffset);
+                        break;
+                    }
                 }
             }
         }

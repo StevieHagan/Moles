@@ -39,7 +39,7 @@ public class Bond : MonoBehaviour
         grid.EvaluateBonds();
     }
 
-    public void UpdateBonds() //Called from Broadcast in Atom.cs
+    public void UpdateBonds() 
     {
         UpdatePointsTo();
         UpdateIsBonded();

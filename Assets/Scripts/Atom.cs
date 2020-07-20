@@ -10,9 +10,9 @@ public class Atom : MonoBehaviour
     [SerializeField] int rotationOffset = 0;
     AtomGrid grid;
     Bond[] bonds;
+    [SerializeField] bool fullyBonded = false;
     int gridSize;
     Vector2Int gridPos;
-    List<Atom> pointsTo = new List<Atom>();
 
 
     void Start()
@@ -20,7 +20,6 @@ public class Atom : MonoBehaviour
         InitialiseOffsets();
         grid = FindObjectOfType<AtomGrid>();
         bonds = GetComponentsInChildren<Bond>();
-        UpdatePointsTo();
     }
 
     void Update()
@@ -34,10 +33,25 @@ public class Atom : MonoBehaviour
         {//When the left mouse button is clicked, the rotation offset is increased (cycles back to 0 from 3)
 
             rotationOffset = (rotationOffset == 3 ? 0 : rotationOffset + 1);
-            BroadcastMessage("UpdateBonds");
-            UpdatePointsTo();
+            UpdateBonds();
             grid.CheckWinCondition();
         }
+    }
+    private void RotationAnimator()
+    {//Rotates the atom using a slerp for smooth animation, target rotation is -90 * offset.
+
+        if (Mathf.Abs(transform.rotation.eulerAngles.z - rotationOffset * -90) <= Mathf.Epsilon)
+        {
+            return;
+        }
+        if (Mathf.Abs(transform.rotation.eulerAngles.z - rotationOffset * -90) <= 0.1)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, rotationOffset * -90);
+            return;
+        }
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, rotationOffset * -90f),
+                                                      rotationSpeed * Time.deltaTime);
     }
 
     private void InitialiseOffsets()
@@ -51,23 +65,22 @@ public class Atom : MonoBehaviour
         else { rotationOffset = 0; }
     }
 
-    private void UpdatePointsTo()
+    private void UpdateBonds()
     {
-        pointsTo.Clear();
-
         foreach (Bond bond in bonds)
         {
-            pointsTo.Add(grid.GetAtomAtGridPos(bond.GetPointsTo()));
+            bond.UpdateBonds();
         }
     }
-    
-    private void RotationAnimator()
-    {//Rotates the atom using a slerp for smooth animation, target rotation is -90 * offset.
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, 0f, rotationOffset * -90f),
-                                                      rotationSpeed * Time.deltaTime);
+    public void SetRotationOffset(int offset)
+    {
+        if (offset < 0 || offset > 3)
+        {
+            Debug.LogError("Rotation offset out of range. Corrected, but game may be unwinnable");
+        }
+        rotationOffset = Mathf.Clamp(offset, 0, 3);
     }
-
 
     public Vector2Int GetGridPos()
     {
@@ -84,16 +97,9 @@ public class Atom : MonoBehaviour
 
     public int GetRotationOffset() { return rotationOffset; }
 
-    public bool PointsTo(Vector2Int gridPos)
+    public void SetFullyBonded(bool fully)
     {
-        //returns true if this atom points to a specified grid position
-        bool pointsToGridPos = false;
-
-        foreach(Bond bond in bonds)
-        {
-            if(bond.GetPointsTo() == gridPos) { pointsToGridPos = true; }
-        }
-        return pointsToGridPos;
+        fullyBonded = fully;
     }
-  
+
 }

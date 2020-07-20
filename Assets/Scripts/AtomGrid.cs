@@ -7,13 +7,15 @@ public class AtomGrid : MonoBehaviour
 {
     int gridSize;
     Atom[,] atoms;
+    LevelController controller;
 
     //Set populated by all bonds
     HashSet<Bond> bonds = new HashSet<Bond>(); 
 
     void Start()
     {
-        gridSize = FindObjectOfType<LevelController>().GetGridSize();
+        controller = FindObjectOfType<LevelController>();
+        gridSize = controller.GetGridSize();
 
         atoms = new Atom[gridSize, gridSize];
 
@@ -51,6 +53,7 @@ public class AtomGrid : MonoBehaviour
         if(!unbondedBondExists)
         {
             print("YOU WIN!!");
+            controller.DisplayWinCanvas();
             return true;
         }
         else
@@ -90,6 +93,22 @@ public class AtomGrid : MonoBehaviour
                     bondA.SetBonded(false);
                 }
             }
+        }
+        //Iterates through each atom and sets it as fully bonded as appropriate.
+        foreach(Atom atom in atoms)
+        {
+            if(atom == null) { continue; }
+            Bond[] childBonds = atom.GetComponentsInChildren<Bond>();
+            bool unbondedBondExists = false;
+            foreach(Bond childBond in childBonds)
+            {
+                if(childBond.GetBonded() == false)
+                {
+                    unbondedBondExists = true;
+                    break;
+                }
+            }
+            atom.SetFullyBonded(!unbondedBondExists);
         }
     }
 }
