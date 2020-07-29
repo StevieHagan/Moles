@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class AtomGrid : MonoBehaviour
 {
-    int gridSize;
     Atom[,] atoms;
     LevelController controller;
 
@@ -15,9 +14,8 @@ public class AtomGrid : MonoBehaviour
     void Start()
     {
         controller = FindObjectOfType<LevelController>();
-        gridSize = controller.GetGridSize();
 
-        atoms = new Atom[gridSize, gridSize];
+        atoms = new Atom[Settings.GetGridSize().x + 2, Settings.GetGridSize().y + 2];
 
         PopulateAtomsArray();
     }

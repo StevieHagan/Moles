@@ -8,6 +8,7 @@ public class Atom : MonoBehaviour
 {
     [SerializeField] float rotationSpeed = 1;
     [SerializeField] int rotationOffset = 0;
+    [SerializeField] Animator[] electronAnimators;
     AtomGrid grid;
     Bond[] bonds;
     [SerializeField] bool fullyBonded = false;
@@ -20,6 +21,7 @@ public class Atom : MonoBehaviour
         InitialiseOffsets();
         grid = FindObjectOfType<AtomGrid>();
         bonds = GetComponentsInChildren<Bond>();
+        electronAnimators = GetComponentsInChildren<Animator>();
     }
 
     void Update()
@@ -100,6 +102,14 @@ public class Atom : MonoBehaviour
     public void SetFullyBonded(bool fully)
     {
         fullyBonded = fully;
+
+        //Skip setting electron animations if they are switched off in settings.
+        if(!Settings.GetElectrons()) { return; }
+
+        foreach(Animator animator in electronAnimators)
+        {
+            animator.SetBool("orbitOn", fully);
+        }
     }
 
 }

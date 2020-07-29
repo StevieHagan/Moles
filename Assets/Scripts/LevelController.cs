@@ -33,4 +33,9 @@ public class LevelController : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void LoadHome()
+    {
+        SceneManager.LoadScene(0);
+    }
 }

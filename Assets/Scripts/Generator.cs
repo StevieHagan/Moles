@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    [SerializeField] int gridSizeX = 15;
-    [SerializeField] int gridSizeY = 15;
     [Tooltip("The proportion of squares which will remain empty")]
     [Range(0f, 1f)][SerializeField] float blockedDensity = 0.5f;
     [Tooltip("The proportion of squares initially marked as seeds")]
@@ -32,6 +30,8 @@ public class Generator : MonoBehaviour
 
     LevelController controller;
     AtomGrid atomGrid;
+    int gridSizeX;
+    int gridSizeY;
     int gridSnap;
     PreAtom[,] atomSquares;
 
@@ -50,21 +50,23 @@ public class Generator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gridSizeX = Settings.GetGridSize().x;
+        gridSizeY = Settings.GetGridSize().y;
         controller = FindObjectOfType<LevelController>();
         atomGrid = FindObjectOfType<AtomGrid>();
         gridSnap = controller.GetGridSnap();
         atomSquares = new PreAtom[gridSizeX, gridSizeY];
+        probabilityDropOff = 1 - probabilityDropOff;
         PopulateArray();
         InstantiateAtoms();
     }
 
     private void PopulateArray()
     {
-        probabilityDropOff = 1 - probabilityDropOff;
         //Insert blocked squares based on density selection, fill rest of array with empties
         for(int y = 0; y < gridSizeY; y++)
         {
-            for (int x = 0; x < gridSizeY; x++)
+            for (int x = 0; x < gridSizeX; x++)
             {
                 if(Random.value <= blockedDensity)
                 {
@@ -86,20 +88,22 @@ public class Generator : MonoBehaviour
             atomSquares[x, y] = new PreAtom(AtomType.seeded);
             i++;
 
+            Debug.Log("Placing seed #" + i);
         } while (i < numSeedSquares);
         //iterate through all the seed squares and place preAtoms in them
         int seededSquares;
+        int iteration = 0;
         do
         {
             seededSquares = 0;
             for (int y = 0; y < gridSizeY; y++)
             {
-                for (int x = 0; x < gridSizeY; x++)
+                for (int x = 0; x < gridSizeX; x++)
                 {
                     if (atomSquares[x, y].atomType == AtomType.seeded)
                     {
                         seededSquares++;
-                        int bondsFormedFactor = 1;
+                        int bondsFormedFactor = 0;
                         //test if bonds already exist in this seeded square
                         if (atomSquares[x, y].joinsUp == true) { bondsFormedFactor++; atomSquares[x, y].atomType = AtomType.occupied; }
                         if (atomSquares[x, y].joinsRight == true) { bondsFormedFactor++; atomSquares[x, y].atomType = AtomType.occupied; }
@@ -108,7 +112,7 @@ public class Generator : MonoBehaviour
                         //test up for empty
                         if (y < gridSizeY - 1 && atomSquares[x, y + 1].atomType == AtomType.empty)
                         {
-                            if (Random.value <= emptyProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= emptyProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsUp = true;
@@ -120,7 +124,7 @@ public class Generator : MonoBehaviour
                         //test up for occupied
                         if (y < gridSizeY - 1 && atomSquares[x, y + 1].atomType == AtomType.occupied)
                         {
-                            if (Random.value <= occupiedProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= occupiedProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsUp = true;
@@ -131,7 +135,7 @@ public class Generator : MonoBehaviour
                         //test right for empty
                         if (x < gridSizeX - 1 && atomSquares[x + 1, y].atomType == AtomType.empty)
                         {
-                            if (Random.value <= emptyProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= emptyProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsRight = true;
@@ -143,7 +147,7 @@ public class Generator : MonoBehaviour
                         //test right for occupied
                         if (x < gridSizeX - 1 && atomSquares[x + 1, y].atomType == AtomType.occupied)
                         {
-                            if (Random.value <= occupiedProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= occupiedProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsRight = true;
@@ -154,7 +158,7 @@ public class Generator : MonoBehaviour
                         //test down for empty
                         if (y > 0 && atomSquares[x, y - 1].atomType == AtomType.empty)
                         {
-                            if (Random.value <= emptyProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= emptyProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsDown = true;
@@ -166,7 +170,7 @@ public class Generator : MonoBehaviour
                         //test down for occupied
                         if (y > 0 && atomSquares[x, y - 1].atomType == AtomType.occupied)
                         {
-                            if (Random.value <= occupiedProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= occupiedProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsDown = true;
@@ -177,7 +181,7 @@ public class Generator : MonoBehaviour
                         //test left for empty
                         if (x > 0 && atomSquares[x - 1, y].atomType == AtomType.empty)
                         {
-                            if (Random.value <= emptyProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= emptyProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsLeft = true;
@@ -189,7 +193,7 @@ public class Generator : MonoBehaviour
                         //test left for occupied
                         if (x > 0 && atomSquares[x - 1, y].atomType == AtomType.occupied)
                         {
-                            if (Random.value <= occupiedProb * probabilityDropOff * bondsFormedFactor)
+                            if (Random.value <= occupiedProb * Mathf.Pow(probabilityDropOff, bondsFormedFactor))
                             {
                                 atomSquares[x, y].atomType = AtomType.occupied;
                                 atomSquares[x, y].joinsLeft = true;
@@ -205,6 +209,8 @@ public class Generator : MonoBehaviour
                     }
                 }
             }
+            Debug.Log("Generator iteration " + iteration);
+            iteration++;
         } while (seededSquares > 0);
 
     }
@@ -213,7 +219,7 @@ public class Generator : MonoBehaviour
     {
         for (int y = 0; y < gridSizeY; y++)
         {
-            for (int x = 0; x < gridSizeY; x++)
+            for (int x = 0; x < gridSizeX; x++)
             {
                 Vector3 instantiationPosition = new Vector3((x+1) * gridSnap, (y+1) * gridSnap, 0);
                 if (testMode)

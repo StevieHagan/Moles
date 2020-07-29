@@ -37,8 +37,8 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.34727153, g: 0.3740369, b: 0.39371288, a: 1}
+  m_Sun: {fileID: 284762445}
+  m_IndirectSpecularColor: {r: 0.31369722, g: 0.2560664, b: 0.32384202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -51,8 +51,8 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 0
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: f62d523f2a355db4d895244a44f8b15c,
+  m_LightingDataAsset: {fileID: 112000000, guid: 09c54d436ed7fb54699c7a511d9bd1e5,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -293,13 +293,13 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 3.65
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -327,7 +327,7 @@ Light:
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -349,13 +349,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 284762444}
-  m_LocalRotation: {x: -0.06803891, y: 0.45709902, z: -0.14091994, w: -0.87554145}
+  m_LocalRotation: {x: 0.031196611, y: 0.00045267405, z: 0.89771044, w: -0.4394798}
   m_LocalPosition: {x: 0, y: 0, z: -15.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 14.357, y: 306.252, z: 10.983001}
+  m_LocalEulerAnglesHint: {x: -1.618, y: 363.189, z: -127.87601}
 --- !u!1 &706304802
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1b7aff5afc63d4aa9df465115a289e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: 20
+  gridSize: 12
   winCanvas: {fileID: 48545061}
 --- !u!4 &842509291
 Transform:
@@ -837,21 +837,20 @@ MonoBehaviour:
   gridSizeX: 10
   gridSizeY: 10
   blockedDensity: 0.14
-  seedDensity: 0.1
-  emptyProb: 0.75
-  occupiedProb: 0.1
-  probabilityDropOff: 0.3
+  seedDensity: 0.07
+  emptyProb: 1
+  occupiedProb: 0.06
+  probabilityDropOff: 0.1
   testMode: 0
-  singleAtom: {fileID: -22616848540786097, guid: 54e5dad2af1974b4ab57c745956c9856,
+  singleAtom: {fileID: -22616848540786097, guid: e5d51aba475a382408412c55a2a2f27b,
     type: 3}
-  doubleCornerAtom: {fileID: -8633269836784956554, guid: 471c068fe007e9e4e9e09f00ec503452,
+  doubleCornerAtom: {fileID: -22616848540786097, guid: 8d9026208c895084fa0224bd8f6955a7,
     type: 3}
-  doubleStraightAtom: {fileID: 171794301861637416, guid: 65e829ddf6fec444ab2f75eeb4cd898e,
+  doubleStraightAtom: {fileID: -22616848540786097, guid: b7c2cbce0859f1c42b19f62e21d42052,
     type: 3}
-  tripleAtom: {fileID: -608416676668101320, guid: cef9b71e0ff2ae647931ce7588fb1722,
+  tripleAtom: {fileID: -22616848540786097, guid: a97f4715cd3cac4418b1d3ca72aa588b,
     type: 3}
-  quadAtom: {fileID: -3428337192400508602, guid: 0a04600da59d63d43b86dd88c8f2babb,
-    type: 3}
+  quadAtom: {fileID: -22616848540786097, guid: b67d49625a943f645b52294aa98096c9, type: 3}
   blockedSquare: {fileID: 1643041677593810452, guid: 87dd21fd1227d51479f6d81de4419cbe,
     type: 3}
   seededSquare: {fileID: 3584161061417774802, guid: eade330711df74544a909d08f11fb978,
