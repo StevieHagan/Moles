@@ -8,6 +8,7 @@ public class LevelController : MonoBehaviour
 {
     const int GRID_SNAP = 2;
     [SerializeField] int gridSize = 10;
+    [SerializeField] float winDelay = 2f;
     [SerializeField] Canvas winCanvas;
 
     private void Start()
@@ -24,8 +25,20 @@ public class LevelController : MonoBehaviour
         return gridSize;
     }
 
-    public void DisplayWinCanvas()
+    public void WinThisLevel()
     {
+        StartCoroutine(LockAndDisplayWin());
+    }
+
+    IEnumerator LockAndDisplayWin()
+    {
+        //Lock off all the atoms to prevent further turning.
+        foreach(Atom atom in FindObjectsOfType<Atom>())
+        {
+            atom.GetComponent<SphereCollider>().enabled = false;
+        }
+        //after the delay display the winCanvas
+        yield return new WaitForSeconds(winDelay);
         winCanvas.enabled = true;
     }
 

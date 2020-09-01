@@ -11,6 +11,8 @@ public class HomeController : MonoBehaviour
 
     int size;
     bool electronsOn;
+    Color whiteButtonBackground;
+    Color yellowButtonBackground;
 
     // Start is called before the first frame update
 
@@ -18,12 +20,19 @@ public class HomeController : MonoBehaviour
     {
         size = Settings.GetSize();
         electronsOn = Settings.GetElectrons();
+        whiteButtonBackground = new Color(1, 1, 1, 0.471f);
+        yellowButtonBackground = new Color(1, 0.92f, 0.016f, 0.471f);
         UpdateButtons();
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(1); //start the game
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public void SizeButtonClick(int newSize)
@@ -47,11 +56,11 @@ public class HomeController : MonoBehaviour
         {
             if(size == i + 1)
             {
-                buttons[i].image.color = Color.magenta;
+                buttons[i].image.color = yellowButtonBackground;
             }
             else
             {
-                buttons[i].image.color = Color.white;
+                buttons[i].image.color = whiteButtonBackground;
             }
         }
     }
