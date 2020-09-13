@@ -10,6 +10,7 @@ public class LevelController : MonoBehaviour
     [SerializeField] int gridSize = 10;
     [SerializeField] float winDelay = 2f;
     [SerializeField] Canvas winCanvas;
+    [SerializeField] AudioClip winSound;
 
     private void Start()
     {
@@ -40,6 +41,7 @@ public class LevelController : MonoBehaviour
         //after the delay display the winCanvas
         yield return new WaitForSeconds(winDelay);
         winCanvas.enabled = true;
+        AudioSource.PlayClipAtPoint(winSound, Camera.main.transform.position);
     }
 
     public void LoadNewPuzzle()

@@ -14,7 +14,7 @@ public class Settings : MonoBehaviour
     const int LARGE_GRID_SIZE_Y = 8;
 
     //Keys
-    const string GAME_SIZE = "gameSize", ELECTRONS_ON = "electronsOn";
+    const string GAME_SIZE = "gameSize", ELECTRONS_ON = "electronsOn", MUSIC_ON = "musicOn";
 
     public static void SetSize(int size)
     {
@@ -44,14 +44,25 @@ public class Settings : MonoBehaviour
         }
     }
 
-    public static void SetElectrons(bool on)
+    public static void SetElectrons(bool isOn)
     {
-        PlayerPrefs.SetInt(ELECTRONS_ON, on ? 1 : 0);
+        PlayerPrefs.SetInt(ELECTRONS_ON, isOn ? 1 : 0);
     }
 
     public static bool GetElectrons()
     {
-        return (PlayerPrefs.GetInt(ELECTRONS_ON, 1) == 1) ? true : false;
+        return (PlayerPrefs.GetInt(ELECTRONS_ON, 1) == 1);
+    }
+
+    public static void SetMusic(bool isOn)
+    {
+        PlayerPrefs.SetInt(MUSIC_ON, isOn ? 1 : 0);
+        FindObjectOfType<MusicPlayer>().UpdateMusicPlayState(isOn);
+    }
+
+    public static bool GetMusic()
+    {
+        return (PlayerPrefs.GetInt(MUSIC_ON, 1) == 1);
     }
 
     public static Vector2Int GetGridSize()

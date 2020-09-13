@@ -9,9 +9,9 @@ public class Atom : MonoBehaviour
     [SerializeField] float rotationSpeed = 1;
     [SerializeField] int rotationOffset = 0;
     [SerializeField] Animator[] electronAnimators;
+    [SerializeField] AudioClip clickSound;
     AtomGrid grid;
     Bond[] bonds;
-    [SerializeField] bool fullyBonded = false;
     int gridSize;
     Vector2Int gridPos;
 
@@ -35,6 +35,9 @@ public class Atom : MonoBehaviour
         {//When the left mouse button is clicked, the rotation offset is increased (cycles back to 0 from 3)
 
             rotationOffset = (rotationOffset == 3 ? 0 : rotationOffset + 1);
+            //click/tap sound
+            AudioSource.PlayClipAtPoint(clickSound, Camera.main.transform.position);
+
             UpdateBonds();
             grid.CheckWinCondition();
         }
@@ -101,7 +104,6 @@ public class Atom : MonoBehaviour
 
     public void SetFullyBonded(bool fully)
     {
-        fullyBonded = fully;
 
         //Skip setting electron animations if they are switched off in settings.
         if(!Settings.GetElectrons()) { return; }

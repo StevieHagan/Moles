@@ -8,9 +8,11 @@ public class HomeController : MonoBehaviour
 {
     [SerializeField] Button[] buttons;
     [SerializeField] Toggle electronToggle;
+    [SerializeField] Toggle musicToggle;
 
     int size;
     bool electronsOn;
+    bool musicOn;
     Color whiteButtonBackground;
     Color yellowButtonBackground;
 
@@ -20,6 +22,7 @@ public class HomeController : MonoBehaviour
     {
         size = Settings.GetSize();
         electronsOn = Settings.GetElectrons();
+        musicOn = Settings.GetMusic();
         whiteButtonBackground = new Color(1, 1, 1, 0.471f);
         yellowButtonBackground = new Color(1, 0.92f, 0.016f, 0.471f);
         UpdateButtons();
@@ -48,9 +51,16 @@ public class HomeController : MonoBehaviour
         Settings.SetElectrons(isOn);
     }
 
+    public void MusicToggle(bool isOn)
+    {
+        musicOn = isOn;
+        Settings.SetMusic(isOn);
+    }
+
     private void UpdateButtons()
     {
-        electronToggle.SetIsOnWithoutNotify(electronsOn); 
+        electronToggle.SetIsOnWithoutNotify(electronsOn);
+        musicToggle.SetIsOnWithoutNotify(musicOn);
 
         for(int i = 0; i < Settings.LARGE; i++)
         {
