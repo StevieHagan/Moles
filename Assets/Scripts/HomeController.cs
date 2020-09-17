@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 public class HomeController : MonoBehaviour
 {
     [SerializeField] Button[] buttons;
+    [SerializeField] Canvas mainCanvas;
+    [SerializeField] Canvas infoCanvas;
+    [SerializeField] TMP_Text counterText;
     [SerializeField] Toggle electronToggle;
     [SerializeField] Toggle musicToggle;
 
@@ -25,6 +29,9 @@ public class HomeController : MonoBehaviour
         musicOn = Settings.GetMusic();
         whiteButtonBackground = new Color(1, 1, 1, 0.471f);
         yellowButtonBackground = new Color(1, 0.92f, 0.016f, 0.471f);
+
+        mainCanvas.enabled = true;
+        infoCanvas.enabled = false;
         UpdateButtons();
     }
 
@@ -37,6 +44,13 @@ public class HomeController : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ShowInfo(bool show)
+    {
+        infoCanvas.enabled = show;
+        UpdateCompletedCounterText();
+    }
+
 
     public void SizeButtonClick(int newSize)
     {
@@ -73,5 +87,14 @@ public class HomeController : MonoBehaviour
                 buttons[i].image.color = whiteButtonBackground;
             }
         }
+    }
+
+    private void UpdateCompletedCounterText()
+    {
+        Vector3Int counts = Settings.GetCompleted();
+
+        counterText.text = "Puzzles completed:\n" +
+                    "Small: " + counts.x.ToString() + "    Med: " + counts.y.ToString() + 
+                    "    Large: " + counts.z.ToString();
     }
 }

@@ -50,7 +50,6 @@ public class AtomGrid : MonoBehaviour
         }
         if(!unbondedBondExists)
         {
-            print("YOU WIN!!");
             controller.WinThisLevel();
             return true;
         }

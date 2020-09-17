@@ -29,6 +29,9 @@ public class LevelController : MonoBehaviour
     public void WinThisLevel()
     {
         StartCoroutine(LockAndDisplayWin());
+
+        //add to the levels won counter
+        Settings.IncrementCompleted(Settings.GetSize());
     }
 
     IEnumerator LockAndDisplayWin()

@@ -87,9 +87,8 @@ public class Generator : MonoBehaviour
             int x = Random.Range(0, gridSizeX); int y = Random.Range(0, gridSizeY);
             atomSquares[x, y] = new PreAtom(AtomType.seeded);
             i++;
-
-            Debug.Log("Placing seed #" + i);
         } while (i < numSeedSquares);
+
         //iterate through all the seed squares and place preAtoms in them
         int seededSquares;
         int iteration = 0;
@@ -209,7 +208,6 @@ public class Generator : MonoBehaviour
                     }
                 }
             }
-            Debug.Log("Generator iteration " + iteration);
             iteration++;
         } while (seededSquares > 0);
 

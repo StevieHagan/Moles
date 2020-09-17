@@ -14,7 +14,8 @@ public class Settings : MonoBehaviour
     const int LARGE_GRID_SIZE_Y = 8;
 
     //Keys
-    const string GAME_SIZE = "gameSize", ELECTRONS_ON = "electronsOn", MUSIC_ON = "musicOn";
+    const string GAME_SIZE = "gameSize", ELECTRONS_ON = "electronsOn", MUSIC_ON = "musicOn",
+                 SMALL_COMPLETED = "smlCompleted", MED_COMPLETED = "medCompleted", LARGE_COMPLETED = "lrgCompleted";
 
     public static void SetSize(int size)
     {
@@ -51,7 +52,7 @@ public class Settings : MonoBehaviour
 
     public static bool GetElectrons()
     {
-        return (PlayerPrefs.GetInt(ELECTRONS_ON, 1) == 1);
+        return (PlayerPrefs.GetInt(ELECTRONS_ON, 0) == 1);
     }
 
     public static void SetMusic(bool isOn)
@@ -63,6 +64,32 @@ public class Settings : MonoBehaviour
     public static bool GetMusic()
     {
         return (PlayerPrefs.GetInt(MUSIC_ON, 1) == 1);
+    }
+
+    public static void IncrementCompleted(int size)
+    {//Increments the number of levels completed for the puzzle size taken as argument
+        switch (size)
+        {
+            case SMALL:
+                PlayerPrefs.SetInt(SMALL_COMPLETED, PlayerPrefs.GetInt(SMALL_COMPLETED, 0) + 1);
+                break;
+            case MEDIUM:
+                PlayerPrefs.SetInt(MED_COMPLETED, PlayerPrefs.GetInt(MED_COMPLETED, 0) + 1);
+                break;
+            case LARGE:
+                PlayerPrefs.SetInt(LARGE_COMPLETED, PlayerPrefs.GetInt(LARGE_COMPLETED, 0) + 1);
+                break;
+            default:
+                Debug.LogError("Size out of range, counter has not been incremented.");
+                return;
+        }
+    }
+
+    public static Vector3Int GetCompleted()
+    {//returns the number of puzzles completed by the player as Vector3Int where x=small y=med z=large
+        return new Vector3Int(PlayerPrefs.GetInt(SMALL_COMPLETED, 0),
+                              PlayerPrefs.GetInt(MED_COMPLETED, 0),
+                              PlayerPrefs.GetInt(LARGE_COMPLETED, 0));
     }
 
     public static Vector2Int GetGridSize()
